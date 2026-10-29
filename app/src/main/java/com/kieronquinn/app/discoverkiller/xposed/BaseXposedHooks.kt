@@ -1,12 +1,14 @@
 package com.kieronquinn.app.discoverkiller.xposed
 
 import android.util.Log
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import java.lang.reflect.Member
+import io.github.libxposed.api.XposedInterface
+import java.lang.reflect.Executable
 import java.lang.reflect.Method
 
-abstract class BaseXposedHooks(private val classLoader: ClassLoader) {
+abstract class BaseXposedHooks(
+    private val xposed: XposedInterface,
+    private val classLoader: ClassLoader
+) {
 
     companion object {
         internal const val TAG = "XposedHooks"
@@ -63,32 +65,31 @@ abstract class BaseXposedHooks(private val classLoader: ClassLoader) {
         }
     }
 
-    private fun hookMethod(hook: Method, replace: Member) {
-        XposedBridge.hookMethod(
-            replace,
-            object: XC_MethodHook() {
-                override fun beforeHookedMethod(param: MethodHookParam) {
-                    val result = (hook.invoke(this@BaseXposedHooks, *param.args) as MethodHook<*>)
-                        .beforeHookedMethod?.invoke(param, param.thisObject)
-                    if(result is MethodResult.Replace){
-                        param.result = result.value
-                    }
-                }
-
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    val result = (hook.invoke(this@BaseXposedHooks, *param.args) as MethodHook<*>)
-                        .afterHookedMethod?.invoke(param, param.result)
-                    if(result is MethodResult.Replace){
-                        param.result = result.value
-                    }
-                }
+    private fun hookMethod(hook: Method, target: Executable) {
+        xposed.hook(target).intercept { chain ->
+            val param = HookParam(chain.thisObject, chain.args.toTypedArray())
+            val before = (hook.invoke(this, *param.args) as MethodHook<*>)
+                .beforeHookedMethod?.invoke(param, param.thisObject)
+            param.result = if(before is MethodResult.Replace) {
+                before.value
+            } else {
+                chain.proceed()
             }
-        )
+            val after = (hook.invoke(this, *param.args) as MethodHook<*>)
+                .afterHookedMethod?.invoke(param, param.result)
+            if(after is MethodResult.Replace) after.value else param.result
+        }
     }
 
+    data class HookParam(
+        val thisObject: Any?,
+        val args: Array<Any?>,
+        var result: Any? = null
+    )
+
     data class MethodHook<T>(
-        val afterHookedMethod: (XC_MethodHook.MethodHookParam.(result: Any?) -> MethodResult<T>)? = null,
-        val beforeHookedMethod: (XC_MethodHook.MethodHookParam.(obj: Any?) -> MethodResult<T>)? = null,
+        val afterHookedMethod: (HookParam.(result: Any?) -> MethodResult<T>)? = null,
+        val beforeHookedMethod: (HookParam.(obj: Any?) -> MethodResult<T>)? = null,
     )
 
     sealed class MethodResult<T> {

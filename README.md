@@ -30,6 +30,8 @@ OR
 ## Compatibility:
 The module should work on any launcher that has the Discover page. It hooks the Google app rather than the launcher, which allows this. I've tested it on Lawnchair, Nova Launcher and Action Launcher successfully.
 
-This module has been tested and is working with LSposed, but should also work with EdXposed. Make sure you enable hooking for the Google App when enabling the module (it should be pre-selected)
+This build requires an Xposed framework implementing modern libxposed API 102. Legacy Xposed and EdXposed are not supported. Enable the module for the Google App and, if used, Entertainment Space, then force stop and restart those apps. The module app itself does not need to be in scope.
+
+To build a test APK, use JDK 17 and Android SDK 34, then run `./gradlew :app:assembleDebug`. The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
 
 Downloads are on releases page or on the [XDA thread](https://forum.xda-developers.com/t/app-xposed-11-07-discover-killer-replace-the-google-discover-page-on-your-home-screen.4120997)

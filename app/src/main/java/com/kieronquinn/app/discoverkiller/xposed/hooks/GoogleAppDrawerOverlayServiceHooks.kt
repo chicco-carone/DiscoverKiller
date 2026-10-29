@@ -33,6 +33,7 @@ import com.kieronquinn.app.discoverkiller.service.IDiscoverKiller
 import com.kieronquinn.app.discoverkiller.service.OverlayUnsetService
 import com.kieronquinn.app.discoverkiller.ui.activities.MainActivity
 import com.kieronquinn.app.discoverkiller.utils.extensions.*
+import io.github.libxposed.api.XposedInterface
 import com.kieronquinn.app.discoverkiller.xposed.BaseXposedHooks
 import com.kieronquinn.app.discoverkiller.xposed.Xposed
 import kotlinx.coroutines.*
@@ -51,9 +52,10 @@ import com.google.android.mediahome.launcheroverlay.aidl.ILauncherOverlay as IMe
  */
 @Suppress("unused")
 class GoogleAppDrawerOverlayServiceHooks(
+    xposed: XposedInterface,
     classLoader: ClassLoader,
     private val applicationContext: Context
-): BaseXposedHooks(classLoader) {
+): BaseXposedHooks(xposed, classLoader) {
 
     companion object {
         private const val SERVICE_CONNECT_TIMEOUT = 2500L

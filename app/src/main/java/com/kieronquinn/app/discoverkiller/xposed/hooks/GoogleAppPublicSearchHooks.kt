@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import com.kieronquinn.app.discoverkiller.service.IDiscoverKillerClient
 import com.kieronquinn.app.discoverkiller.utils.extensions.hasDiscoverKillerToken
+import io.github.libxposed.api.XposedInterface
 import com.kieronquinn.app.discoverkiller.xposed.BaseXposedHooks
 
 /**
@@ -12,8 +13,9 @@ import com.kieronquinn.app.discoverkiller.xposed.BaseXposedHooks
  *  therefore tell that the module is not installed correctly.
  */
 class GoogleAppPublicSearchHooks(
+    xposed: XposedInterface,
     classLoader: ClassLoader
-): BaseXposedHooks(classLoader) {
+): BaseXposedHooks(xposed, classLoader) {
 
     companion object {
         private const val CLASSIC_SERVICE =

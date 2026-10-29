@@ -77,8 +77,9 @@ dependencies {
     implementation 'me.saket:better-link-movement-method:2.2.0'
     compileOnly project(path: ':systemstubs')
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'io.github.libxposed:api:102.0.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    compileOnly 'de.robv.android.xposed:api:82'
+    compileOnly 'io.github.libxposed:api:102.0.0'
 }

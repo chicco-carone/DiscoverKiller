@@ -8,6 +8,7 @@ import android.widget.HorizontalScrollView
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import com.kieronquinn.app.discoverkiller.utils.extensions.toPx
+import io.github.libxposed.api.XposedInterface
 import com.kieronquinn.app.discoverkiller.xposed.BaseXposedHooks
 
 /**
@@ -16,9 +17,10 @@ import com.kieronquinn.app.discoverkiller.xposed.BaseXposedHooks
  */
 @Suppress("unused", "UNUSED_PARAMETER")
 class EntertainmentSpaceLayoutHooks(
+    xposed: XposedInterface,
     classLoader: ClassLoader,
     private val context: Context
-): BaseXposedHooks(classLoader) {
+): BaseXposedHooks(xposed, classLoader) {
 
     override val clazz = LayoutInflater::class.java.name
 

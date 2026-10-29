@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Entry point is loaded from META-INF/xposed/java_init.list.
+-keep class com.kieronquinn.app.discoverkiller.xposed.Xposed {
+    public <init>();
+}
+# Hook definitions are looked up by method name and parameter types.
+-keepclassmembers class * extends com.kieronquinn.app.discoverkiller.xposed.BaseXposedHooks {
+    *** *(...);
+}
+-dontwarn io.github.libxposed.annotation.**

@@ -5,17 +5,20 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.view.ViewGroup
 import com.kieronquinn.app.discoverkiller.providers.OverlaySettingsProvider
 import com.kieronquinn.app.discoverkiller.repositories.SettingsRepository.OverlayMode
 import com.kieronquinn.app.discoverkiller.ui.views.WebViewContainer
 import com.kieronquinn.app.discoverkiller.utils.WebDestination.toWebUri
+import io.github.libxposed.api.XposedInterface
 import com.kieronquinn.app.discoverkiller.xposed.BaseXposedHooks
 import java.util.WeakHashMap
 
 class GoogleAppMinusOneActivityHooks(
+    xposed: XposedInterface,
     classLoader: ClassLoader,
     private val applicationContext: Context
-): BaseXposedHooks(classLoader) {
+): BaseXposedHooks(xposed, classLoader) {
 
     companion object {
         const val CLASS_NAME =
@@ -57,8 +60,14 @@ class GoogleAppMinusOneActivityHooks(
                         activity, insetForSystemBars = true
                     ).also {
                         webViews[activity] = it
-                        activity.setContentView(it)
+                        // Google attaches fragments asynchronously to its original containers.
+                        // Keep them in place and cover the content with our opaque WebView.
+                        activity.addContentView(it, ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        ))
                     }
+                    container.bringToFront()
                     container.loadUrl(uri.toString())
                     container.onResume()
                     Log.d(TAG, "Embedded configured WEB in MinusOneActivity")

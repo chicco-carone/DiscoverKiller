@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
+import io.github.libxposed.api.XposedInterface
 import com.kieronquinn.app.discoverkiller.xposed.BaseXposedHooks
 
 /**
@@ -15,8 +16,9 @@ import com.kieronquinn.app.discoverkiller.xposed.BaseXposedHooks
  */
 @Suppress("unused", "UNUSED_PARAMETER")
 class EntertainmentSpaceDetailsActivityHooks(
+    xposed: XposedInterface,
     classLoader: ClassLoader
-): BaseXposedHooks(classLoader) {
+): BaseXposedHooks(xposed, classLoader) {
 
     override val clazz = "com.google.android.apps.mediahome.launcher.details.ui.DetailsActivity"
 
