@@ -30,6 +30,7 @@ interface SettingsRepository {
     val overlayComponent: DiscoverKillerSetting<String>
     val overlayApp: DiscoverKillerSetting<String>
     val overlayAppNewTask: DiscoverKillerSetting<Boolean>
+    val webUrl: DiscoverKillerSetting<String>
     val originalHandlesSearch: DiscoverKillerSetting<Boolean>
 
     val overlayBackground: DiscoverKillerSetting<SplashScreenType>
@@ -47,7 +48,7 @@ interface SettingsRepository {
     }
 
     enum class OverlayMode {
-        OVERLAY, APP
+        OVERLAY, APP, WEB
     }
 
 }
@@ -77,6 +78,9 @@ class SettingsRepositoryImpl(
 
         private const val KEY_OVERLAY_APP_NEW_TASK = "overlay_app_new_task"
         private const val DEFAULT_OVERLAY_APP_NEW_TASK = true
+
+        private const val KEY_WEB_URL = "web_url"
+        private const val DEFAULT_WEB_URL = ""
 
         private const val KEY_ORIGINAL_HANDLES_SEARCH = "original_handles_search"
         private const val DEFAULT_ORIGINAL_HANDLES_SEARCH = false
@@ -144,6 +148,10 @@ class SettingsRepositoryImpl(
         KEY_OVERLAY_APP_NEW_TASK, DEFAULT_OVERLAY_APP_NEW_TASK, onOverlaySettingsChanged
     )
 
+    override val webUrl = string(
+        KEY_WEB_URL, DEFAULT_WEB_URL, onOverlaySettingsChanged
+    )
+
     override val overlayBackground = enum(
         KEY_OVERLAY_BACKGROUND, DEFAULT_OVERLAY_BACKGROUND, onOverlaySettingsChanged
     )
@@ -160,7 +168,7 @@ class SettingsRepositoryImpl(
         var type = overlayType.getSync()
         var component = overlayComponent.getSync()
         var original = originalHandlesSearch.getSync()
-        if(overlayMode.getSync() == OverlayMode.APP){
+        if(overlayMode.getSync() != OverlayMode.OVERLAY){
             type = OverlayType.NOW
             component = OverlayAppLauncherService.COMPONENT.flattenToString()
             //App Overlay has no handling so always use the original
@@ -179,7 +187,11 @@ class SettingsRepositoryImpl(
             type,
             component,
             original,
-            entertainmentSpaceRestart.getSync()
+            entertainmentSpaceRestart.getSync(),
+            overlayMode.getSync(),
+            overlayApp.getSync(),
+            overlayAppNewTask.getSync(),
+            webUrl.getSync()
         )
     }
 

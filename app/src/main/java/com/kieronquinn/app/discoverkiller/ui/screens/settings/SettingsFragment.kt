@@ -132,6 +132,14 @@ class SettingsFragment: BaseSettingsFragment(), ProvidesOverflow {
                 onChanged = viewModel::onAppNewTaskChanged
             )
         }else null
+        val webUrl = if(state.overlayMode == OverlayMode.WEB) {
+            GenericSettingsItem.Setting(
+                getString(R.string.settings_web_url),
+                state.webUrl.ifBlank { getString(R.string.settings_web_url_unset) },
+                R.drawable.ic_rss_configure_url,
+                viewModel::onWebUrlClicked
+            )
+        }else null
         val restart = if(state.overlaySupportsRestart && state.overlayMode == OverlayMode.OVERLAY) {
             GenericSettingsItem.SwitchSetting(
                 state.restartEnabled,
@@ -158,7 +166,10 @@ class SettingsFragment: BaseSettingsFragment(), ProvidesOverflow {
                 viewModel::onSplashClicked
             )
         }else null
-        return listOfNotNull(switch, header, overlay, useOriginal, app, appNewTask, splash, restart, monet, about)
+        return listOfNotNull(
+            switch, header, overlay, useOriginal, app, appNewTask, webUrl, splash, restart,
+            monet, about
+        )
     }
 
     private fun setupUpdateSnackbar() {

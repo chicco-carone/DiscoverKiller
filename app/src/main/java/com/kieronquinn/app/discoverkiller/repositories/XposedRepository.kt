@@ -26,10 +26,6 @@ class XposedRepositoryImpl(private val context: Context): XposedRepository {
         private const val TIMEOUT = 2500L
         private val SERVICE_INTENT = Intent("com.google.android.apps.gsa.publicsearch.IPublicSearchService").apply {
             `package` = Xposed.GOOGLE_APP_PACKAGE_NAME
-            component = ComponentName(
-                Xposed.GOOGLE_APP_PACKAGE_NAME,
-                "com.google.android.apps.gsa.publicsearch.PublicSearchService"
-            )
         }
     }
 

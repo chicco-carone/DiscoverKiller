@@ -46,10 +46,14 @@ class Xposed: IXposedHookLoadPackage {
     }
 
     private fun gsaHooks(classLoader: ClassLoader, context: Context): Array<BaseXposedHooks> {
-        return arrayOf(
+        val hooks = mutableListOf<BaseXposedHooks>(
             GoogleAppDrawerOverlayServiceHooks(classLoader, context),
             GoogleAppPublicSearchHooks(classLoader)
         )
+        if(runCatching { classLoader.loadClass(GoogleAppMinusOneActivityHooks.CLASS_NAME) }.isSuccess){
+            hooks.add(GoogleAppMinusOneActivityHooks(classLoader, context))
+        }
+        return hooks.toTypedArray()
     }
 
     private fun entertainmentSpaceHooks(

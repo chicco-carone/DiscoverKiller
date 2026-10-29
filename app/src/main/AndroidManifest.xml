@@ -35,6 +35,14 @@
         <activity android:name=".ui.activities.SettingsBackgroundPickerActivity"
             android:theme="@style/Theme.DiscoverKiller.Wallpaper"/>
 
+        <activity
+            android:name=".ui.activities.WebViewActivity"
+            android:enableOnBackInvokedCallback="true"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:permission="com.google.android.googlequicksearchbox.permission.FINISH_GEL_ACTIVITY"
+            android:theme="@style/Theme.DiscoverKiller.WebView" />
+
         <!-- Discover Killer service for accessing root commands. Protected by a permission GSB has -->
         <service android:name=".service.DiscoverKillerService"
             android:permission="com.google.android.googlequicksearchbox.permission.FINISH_GEL_ACTIVITY"

@@ -7,9 +7,10 @@
     <string name="notification_service_foreground_subtitle">Running</string>
     <string name="loading">Loading…</string>
     <string name="overlay_unset_setup">Tap to configure</string>
-    <string name="overlay_choose">Pick an overlay</string>
+    <string name="overlay_choose">Choose content</string>
     <string name="overlay_custom">Custom Overlay</string>
     <string name="overlay_app">Custom App</string>
+    <string name="overlay_web">Web</string>
 
     <string name="overlay_type_now">Classic Overlay</string>
     <string name="overlay_type_media">Media Overlay</string>
@@ -22,6 +23,9 @@
     <string name="settings_main_switch">Enable Discover Killer</string>
     <string name="settings_overlay_picker">Select Overlay</string>
     <string name="settings_app_picker">Select App</string>
+    <string name="settings_web_url">Web page URL</string>
+    <string name="settings_web_url_hint">Enter an HTTP or HTTPS URL</string>
+    <string name="settings_web_url_unset">Not set</string>
     <string name="settings_restart">Automatically Restart Overlay</string>
     <string name="settings_restart_content">Automatically stops and restarts the overlay when not in use. This fixes an issue where it will sometimes stop working and display a black screen instead.\n<b>Note:</b> This breaks the Provider Settings on Entertainment Space, temporarily disable this if you wish to change providers.</string>
     <string name="settings_monet">Material You Colours</string>
@@ -55,6 +59,7 @@
 
     <string name="app_launch_failed">Failed to launch app</string>
     <string name="app_launch_not_set">No app set to launch</string>
+    <string name="web_launch_failed">Set a valid HTTP or HTTPS URL</string>
 
     <string name="rss_configure_url_title">Feed URL</string>
     <string name="rss_configure_url_content_unset">Not Set</string>

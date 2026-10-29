@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_ossLicensesMenuActivity"
             app:destination="@id/ossLicensesMenuActivity" />
+        <action
+            android:id="@+id/action_settingsFragment_to_webUrlBottomSheetFragment"
+            app:destination="@id/webUrlBottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/overlayPickerFragment"
@@ -70,5 +73,10 @@
         android:id="@+id/ossLicensesMenuActivity"
         android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
         tools:layout="@layout/libraries_social_licenses_license_menu_activity" />
+    <dialog
+        android:id="@+id/webUrlBottomSheetFragment"
+        android:name="com.kieronquinn.app.discoverkiller.ui.screens.settings.weburl.WebUrlBottomSheetFragment"
+        android:label=" "
+        tools:layout="@layout/fragment_bottom_sheet_rss_configure" />
 
 </navigation>

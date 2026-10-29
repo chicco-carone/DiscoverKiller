@@ -1,6 +1,7 @@
 package com.kieronquinn.app.discoverkiller.ui.screens.rssconfigure.bottomsheet
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -22,6 +23,7 @@ abstract class BaseRssConfigureBottomSheet : BaseBottomSheetFragment<FragmentBot
 
     abstract val title: Int
     abstract val hint: Int?
+    open val inputType = InputType.TYPE_CLASS_TEXT
 
     open val positiveText: Int = android.R.string.ok
     open val negativeText: Int = android.R.string.cancel
@@ -65,6 +67,7 @@ abstract class BaseRssConfigureBottomSheet : BaseBottomSheetFragment<FragmentBot
             }
         }
         binding.rssConfigureEdit.setText(viewModel.value.value)
+        binding.rssConfigureEdit.inputType = inputType
         binding.rssConfigureInput.hint = hint?.let { getString(it) }
         binding.rssConfigureInput.applyMonet()
         binding.rssConfigureEdit.applyMonet()

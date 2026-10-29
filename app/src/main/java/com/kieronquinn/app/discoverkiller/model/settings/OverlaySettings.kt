@@ -15,7 +15,15 @@ data class OverlaySettings(
     @SerializedName("original_handles_search")
     val originalHandlesSearch: Boolean,
     @SerializedName("entertainment_space_restart")
-    val entertainmentSpaceRestart: Boolean
+    val entertainmentSpaceRestart: Boolean,
+    @SerializedName("overlay_mode")
+    val overlayMode: SettingsRepository.OverlayMode,
+    @SerializedName("overlay_app")
+    val overlayApp: String,
+    @SerializedName("overlay_app_new_task")
+    val overlayAppNewTask: Boolean,
+    @SerializedName("web_url")
+    val webUrl: String
 ) {
 
     companion object {

@@ -31,6 +31,7 @@ import com.kieronquinn.app.discoverkiller.ui.screens.rssconfigure.title.RssTitle
 import com.kieronquinn.app.discoverkiller.ui.screens.rssconfigure.url.RssUrlBottomSheetViewModel
 import com.kieronquinn.app.discoverkiller.ui.screens.settings.SettingsViewModel
 import com.kieronquinn.app.discoverkiller.ui.screens.settings.SettingsViewModelImpl
+import com.kieronquinn.app.discoverkiller.ui.screens.settings.weburl.WebUrlBottomSheetViewModel
 import com.kieronquinn.app.discoverkiller.ui.screens.update.UpdateViewModel
 import com.kieronquinn.app.discoverkiller.ui.screens.update.UpdateViewModelImpl
 import com.kieronquinn.app.discoverkiller.utils.picasso.PackageItemInfoRequestHandler
@@ -79,6 +80,7 @@ class DiscoverKiller: Application() {
         viewModel { RssUrlBottomSheetViewModel(get(), get()) }
         viewModel { RssTitleBottomSheetViewModel(get(), get()) }
         viewModel { RssLogoBottomSheetViewModel(get(), get()) }
+        viewModel { WebUrlBottomSheetViewModel(get(), get()) }
         viewModel<SettingsBackgroundPickerViewModel> { SettingsBackgroundPickerViewModelImpl(get(), get()) }
     }
 

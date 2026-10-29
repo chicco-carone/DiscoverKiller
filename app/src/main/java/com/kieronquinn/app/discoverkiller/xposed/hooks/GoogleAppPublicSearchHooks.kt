@@ -15,7 +15,18 @@ class GoogleAppPublicSearchHooks(
     classLoader: ClassLoader
 ): BaseXposedHooks(classLoader) {
 
-    override val clazz = "com.google.android.apps.gsa.publicsearch.PublicSearchService"
+    companion object {
+        private const val CLASSIC_SERVICE =
+            "com.google.android.apps.gsa.publicsearch.PublicSearchService"
+        private const val CLASSICLESS_SERVICE =
+            "com.google.android.apps.gsa.publicsearch.classicless.ClassicLessPublicSearchService"
+    }
+
+    override val clazz = if(runCatching { classLoader.loadClass(CLASSICLESS_SERVICE) }.isSuccess){
+        CLASSICLESS_SERVICE
+    }else{
+        CLASSIC_SERVICE
+    }
 
     private val discoverKillerClientService = DiscoverKillerClientService()
 

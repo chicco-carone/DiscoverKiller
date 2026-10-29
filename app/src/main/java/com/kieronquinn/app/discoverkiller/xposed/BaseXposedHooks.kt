@@ -33,26 +33,31 @@ abstract class BaseXposedHooks(private val classLoader: ClassLoader) {
             //We only want method hooks
             if(hook.returnType != MethodHook::class.java) return@forEach
             hook.isAccessible = true
-            val replace = when {
-                hook.name.startsWith("any_") -> {
-                    clazz.declaredMethods.firstOrNull {
-                        it.parameterTypes.contentEquals(hook.parameterTypes)
-                    } ?: run {
-                        Log.e(
-                            TAG, "No target found for hook with parameter types " +
-                                hook.parameterTypes.joinToString(", ") { it.name })
+            val replace = try {
+                when {
+                    hook.name.startsWith("any_") -> {
+                        clazz.declaredMethods.firstOrNull {
+                            it.parameterTypes.contentEquals(hook.parameterTypes)
+                        } ?: run {
+                            Log.e(
+                                TAG, "No target found for hook with parameter types " +
+                                    hook.parameterTypes.joinToString(", ") { it.name })
+                            return@forEach
+                        }
+                    }
+                    hook.name.startsWith("constructor_") -> {
+                        clazz.getDeclaredConstructor(*hook.parameterTypes)
+                    }
+                    hook.name.startsWith("skip_") -> {
                         return@forEach
                     }
+                    else -> {
+                        clazz.getDeclaredMethod(hook.name, *hook.parameterTypes)
+                    }
                 }
-                hook.name.startsWith("constructor_") -> {
-                    clazz.getDeclaredConstructor(*hook.parameterTypes)
-                }
-                hook.name.startsWith("skip_") -> {
-                    return@forEach
-                }
-                else -> {
-                    clazz.getDeclaredMethod(hook.name, *hook.parameterTypes)
-                }
+            }catch (e: NoSuchMethodException){
+                Log.w(TAG, "Skipping missing target ${clazz.name}.${hook.name}")
+                return@forEach
             }
             hookMethod(hook, replace)
         }

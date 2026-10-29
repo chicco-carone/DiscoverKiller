@@ -2,7 +2,7 @@ package com.kieronquinn.app.discoverkiller.ui.screens.rssconfigure.bottomsheet
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kieronquinn.app.discoverkiller.components.navigation.RssNavigation
+import com.kieronquinn.app.discoverkiller.components.navigation.BaseNavigation
 import com.kieronquinn.app.discoverkiller.repositories.BaseSettingsRepository
 import com.kieronquinn.app.discoverkiller.repositories.BaseSettingsRepository.DiscoverKillerSetting
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,7 @@ abstract class BaseRssConfigureBottomSheetViewModel: ViewModel() {
 }
 
 abstract class BaseRssConfigureBottomSheetViewModelImpl(
-    private val navigation: RssNavigation
+    private val navigation: BaseNavigation
 ): BaseRssConfigureBottomSheetViewModel() {
 
     override val value by lazy {

@@ -13,10 +13,12 @@ import com.kieronquinn.app.discoverkiller.components.splash.RemoteSplashLoader
 import com.kieronquinn.app.discoverkiller.components.splash.RemoteSplashLoaderImpl
 import com.kieronquinn.app.discoverkiller.databinding.OverlayAppLauncherBinding
 import com.kieronquinn.app.discoverkiller.repositories.SettingsRepository
+import com.kieronquinn.app.discoverkiller.repositories.SettingsRepository.OverlayMode
 import com.kieronquinn.app.discoverkiller.ui.screens.overlays.BaseOverlay
 import com.kieronquinn.app.discoverkiller.utils.extensions.isAppInstalled
 import com.kieronquinn.app.discoverkiller.utils.extensions.isDarkMode
 import com.kieronquinn.app.discoverkiller.utils.extensions.removeStatusNavBackgroundOnPreDraw
+import com.kieronquinn.app.discoverkiller.utils.WebDestination
 import com.kieronquinn.monetcompat.core.MonetCompat
 import kotlinx.coroutines.delay
 import org.koin.core.component.inject
@@ -41,20 +43,25 @@ class AppLauncherOverlay(private val context: Context): BaseOverlay<OverlayAppLa
     }
 
     private val appLaunchIntent by lazy {
-        val overlayApp = overlayPackage ?: return@lazy null
-        val newTask = settings.overlayAppNewTask.getSync()
-        if(!context.packageManager.isAppInstalled(overlayApp)) return@lazy null
-        val intent = Intent(Intent.ACTION_MAIN).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-            component = overlayComponent
-            if(newTask){
+        when(settings.overlayMode.getSync()){
+            OverlayMode.APP -> {
+                val overlayApp = overlayPackage ?: return@lazy null
+                val newTask = settings.overlayAppNewTask.getSync()
+                if(!context.packageManager.isAppInstalled(overlayApp)) return@lazy null
+                Intent(Intent.ACTION_MAIN).apply {
+                    addCategory(Intent.CATEGORY_LAUNCHER)
+                    component = overlayComponent
+                    if(newTask){
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                }.takeIf { context.packageManager.queryIntentActivities(it, 0).isNotEmpty() }
+            }
+            OverlayMode.WEB -> WebDestination.createIntent(settings.webUrl.getSync())?.apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
-            addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            OverlayMode.OVERLAY -> null
         }
-        if(context.packageManager.queryIntentActivities(intent, 0).isNotEmpty()){
-            intent
-        }else null
     }
 
     private val splashLoader by lazy {
@@ -131,10 +138,14 @@ class AppLauncherOverlay(private val context: Context): BaseOverlay<OverlayAppLa
             isWaitingForOpen = true
             startActivity(it)
         } ?: run {
-            val text = if(settings.overlayApp.getSync().isEmpty()){
-                remoteContext.getString(R.string.app_launch_not_set)
-            }else{
-                remoteContext.getString(R.string.app_launch_failed)
+            val text = when(settings.overlayMode.getSync()){
+                OverlayMode.WEB -> remoteContext.getString(R.string.web_launch_failed)
+                OverlayMode.APP -> if(settings.overlayApp.getSync().isEmpty()){
+                    remoteContext.getString(R.string.app_launch_not_set)
+                }else{
+                    remoteContext.getString(R.string.app_launch_failed)
+                }
+                OverlayMode.OVERLAY -> remoteContext.getString(R.string.app_launch_failed)
             }
             Toast.makeText(this, text, Toast.LENGTH_LONG).show()
         }

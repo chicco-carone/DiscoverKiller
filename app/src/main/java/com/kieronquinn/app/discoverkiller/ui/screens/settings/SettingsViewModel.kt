@@ -33,6 +33,7 @@ abstract class SettingsViewModel: ViewModel() {
     abstract fun onOverlayModeClicked(overlayMode: OverlayMode)
     abstract fun onCustomOverlayClicked()
     abstract fun onChooseAppClicked()
+    abstract fun onWebUrlClicked()
     abstract fun onAppNewTaskChanged(enabled: Boolean)
     abstract fun onRestartChanged(enabled: Boolean)
     abstract fun onMonetChanged(enabled: Boolean)
@@ -57,6 +58,7 @@ abstract class SettingsViewModel: ViewModel() {
             val overlayComponent: ComponentName,
             val overlayAppPackage: String,
             val overlayAppLabel: CharSequence,
+            val webUrl: String,
             val overlayBackground: RemoteSplashLoader.SplashScreenType,
             val customOverlayName: CharSequence,
             val shouldShowMonet: Boolean,
@@ -121,6 +123,7 @@ class SettingsViewModelImpl(
     private val overlayBackground = settingsRepository.overlayBackground
     private val restartEnabled = settingsRepository.entertainmentSpaceRestart
     private val appNewTask = settingsRepository.overlayAppNewTask
+    private val webUrl = settingsRepository.webUrl
     private val monetEnabled = settingsRepository.useMonet
     private val useOriginal = settingsRepository.originalHandlesSearch
 
@@ -132,12 +135,20 @@ class SettingsViewModelImpl(
         Triple(useOriginal, restart, monet)
     }
 
+    private data class AppSettings(
+        val enabled: Boolean,
+        val component: String,
+        val newTask: Boolean,
+        val webUrl: String
+    )
+
     private val appSettings = combine(
         enabled.asFlow(),
         overlayAppComponent.asFlow(),
-        appNewTask.asFlow()
-    ) { enabled, component, newTask ->
-        Triple(enabled, component, newTask)
+        appNewTask.asFlow(),
+        webUrl.asFlow()
+    ) { enabled, component, newTask, webUrl ->
+        AppSettings(enabled, component, newTask, webUrl)
     }
 
     override val state = combine(
@@ -152,16 +163,17 @@ class SettingsViewModelImpl(
         val monetSupported = overlayRepository.doesOverlaySupportMonet(componentName) ||
                 type == OverlayMode.APP
         val restartSupported = overlayRepository.doesOverlaySupportRestart(componentName)
-        val appName = appRepository.getActivityName(app.second)
-        val newTask = app.third
+        val appName = appRepository.getActivityName(app.component)
+        val newTask = app.newTask
         val monetEnabled = settings.third
         val restartEnabled = settings.second
         State.Loaded(
-            app.first,
+            app.enabled,
             type,
             componentName,
-            app.second,
+            app.component,
             appName,
+            app.webUrl,
             background,
             overlayLabel,
             monetSupported,
@@ -198,6 +210,12 @@ class SettingsViewModelImpl(
     override fun onChooseAppClicked() {
         viewModelScope.launch {
             navigation.navigate(SettingsFragmentDirections.actionSettingsFragmentToAppPickerFragment())
+        }
+    }
+
+    override fun onWebUrlClicked() {
+        viewModelScope.launch {
+            navigation.navigate(SettingsFragmentDirections.actionSettingsFragmentToWebUrlBottomSheetFragment())
         }
     }
 
