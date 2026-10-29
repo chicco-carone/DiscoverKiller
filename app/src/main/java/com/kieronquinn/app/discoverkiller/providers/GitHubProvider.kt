@@ -10,7 +10,7 @@ interface GitHubProvider {
 
     companion object {
         fun getGitHubProvider(repository: String): GitHubProvider = Retrofit.Builder()
-            .baseUrl("https://api.github.com/repos/KieronQuinn/$repository/")
+            .baseUrl("https://api.github.com/repos/chicco-carone/$repository/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(GitHubProvider::class.java)

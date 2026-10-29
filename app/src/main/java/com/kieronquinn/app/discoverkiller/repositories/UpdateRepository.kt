@@ -85,7 +85,7 @@ class UpdateRepositoryImpl(context: Context): UpdateRepository {
     override suspend fun getUpdateState(ignoreCache: Boolean): UpdateState = withContext(
         Dispatchers.IO
     ) {
-        getRelease(BuildConfig.TAG_NAME, discoverKillerProvider, "DiscoverKiller", ignoreCache)
+        getRelease(BuildConfig.TAG_NAME, discoverKillerProvider, "chicco-carone-DiscoverKiller", ignoreCache)
     }
 
     override suspend fun isAnyUpdateAvailable(): Boolean {
